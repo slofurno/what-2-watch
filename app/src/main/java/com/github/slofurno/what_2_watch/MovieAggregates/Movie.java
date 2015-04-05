@@ -15,9 +15,14 @@ public class Movie {
 
     }
 
+    public Movie(String title, float rating ){
+        this.title=title;
+        this.rating=rating;
+    }
+
     public String toString(){
 
-        return title + " " + year + "\r" + rating;
+        return title + "  " +  rating;
 
     }
 
