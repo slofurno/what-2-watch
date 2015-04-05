@@ -15,4 +15,10 @@ public class Movie {
 
     }
 
+    public String toString(){
+
+        return title + " " + year + "\r" + rating;
+
+    }
+
 }
