@@ -1,4 +1,4 @@
-package com.github.slofurno.what_2_watch;
+package com.github.slofurno.what_2_watch.Activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -7,13 +7,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.github.slofurno.what_2_watch.MovieAggregates.Movie;
+import com.github.slofurno.what_2_watch.MovieAggregates.MovieClient;
+import com.github.slofurno.what_2_watch.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;

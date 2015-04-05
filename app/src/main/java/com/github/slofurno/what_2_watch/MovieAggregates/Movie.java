@@ -1,4 +1,4 @@
-package com.github.slofurno.what_2_watch;
+package com.github.slofurno.what_2_watch.MovieAggregates;
 
 /**
  * Created by slofurno on 4/4/2015.

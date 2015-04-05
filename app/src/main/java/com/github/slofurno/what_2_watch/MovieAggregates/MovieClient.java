@@ -1,4 +1,4 @@
-package com.github.slofurno.what_2_watch;
+package com.github.slofurno.what_2_watch.MovieAggregates;
 
 import com.loopj.android.http.*;
 
