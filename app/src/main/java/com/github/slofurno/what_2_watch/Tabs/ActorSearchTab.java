@@ -11,13 +11,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import com.github.slofurno.what_2_watch.Activities.LoginActivity;
 import com.github.slofurno.what_2_watch.Activities.MainActivity;
+import com.github.slofurno.what_2_watch.ActorAdapter;
 import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
 import com.github.slofurno.what_2_watch.R;
+import com.github.slofurno.what_2_watch.UserState;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -38,11 +41,10 @@ public class ActorSearchTab extends Fragment {
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private ListView listview;
     private ArrayAdapter<Actor> adapter;
-    private List<Actor> actors;
     private Context context;
     private View rootView;
+    private ListView listview;
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -67,6 +69,66 @@ public class ActorSearchTab extends Fragment {
         rootView = inflater.inflate(R.layout.actorsearch_layout, container, false);
 
         listview = (ListView)rootView.findViewById(R.id.actorlist);
+
+        ActorAdapter adapter = new ActorAdapter(getActivity().getApplicationContext(), UserState.myActors);
+
+        //ArrayAdapter<Actor> adapter = new ArrayAdapter<Actor>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, actors);
+        listview.setAdapter(adapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    final int position, long id) {
+
+                Actor actor = (Actor)listview.getItemAtPosition(position);
+                CheckedTextView cv = (CheckedTextView)view;
+
+                if (UserState.selectedActors.contains(actor.ActorId)){
+                    UserState.selectedActors.remove(actor.ActorId);
+                    //UserState.myActors.remove(actor);
+                    cv.setChecked(false);
+                    //listview.setItemChecked(position,false);
+                }
+                else {
+                    UserState.selectedActors.add(actor.ActorId);
+                    if (!UserState.addedActors.contains(actor.ActorId)){
+                        UserState.myActors.add(actor);
+                        UserState.addedActors.add(actor.ActorId);
+                    }
+                    cv.setChecked(true);
+                    //listview.setItemChecked(position,true);
+                }
+                new AsyncTask<String, Void, String>(){
+                    @Override
+                    protected String doInBackground(String... urls) {
+
+                        try {
+                            postUrl(urls[0]);
+                            return "ok?";
+                        } catch (IOException e) {
+                            return "Unable to retrieve web page. URL may be invalid.";
+                        }
+                    }
+
+                }.execute("http://gdf3.com:555/api/users/" + LoginActivity.mAccount.UserId + "/actors/"+actor.ActorId);
+
+            }
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+       // actually setting the checkmode on this appears to fck everything up
 
         Button button = (Button)rootView.findViewById(R.id.searchbutton);
         button.setOnClickListener(new View.OnClickListener() {
@@ -110,15 +172,29 @@ public class ActorSearchTab extends Fragment {
                     return;
                 }
 
-                ArrayAdapter<Actor> adapter = new ArrayAdapter<Actor>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, actors);
+                ActorAdapter adapter = new ActorAdapter(getActivity().getApplicationContext(), actors);
+
+                //ArrayAdapter<Actor> adapter = new ArrayAdapter<Actor>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, actors);
                 listview.setAdapter(adapter);
+/*
                 listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             final int position, long id) {
 
                         Actor actor = (Actor)listview.getItemAtPosition(position);
+                        CheckedTextView cv = (CheckedTextView)view;
 
+                        if (UserState.selectedActors.contains(actor.ActorId)){
+                            UserState.selectedActors.remove(actor.ActorId);
+                            cv.setChecked(false);
+                            //listview.setItemChecked(position,false);
+                        }
+                        else {
+                            UserState.selectedActors.add(actor.ActorId);
+                            cv.setChecked(true);
+                            //listview.setItemChecked(position,true);
+                        }
                         new AsyncTask<String, Void, String>(){
                             @Override
                             protected String doInBackground(String... urls) {
@@ -133,12 +209,9 @@ public class ActorSearchTab extends Fragment {
 
                         }.execute("http://gdf3.com:555/api/users/" + LoginActivity.mAccount.UserId + "/actors/"+actor.ActorId);
 
-                        //Boolean prev = listView.isItemChecked(position);
-                        //Boolean newval = !prev;
-                        //listView.setItemChecked(position,true);
                     }
 
-                });
+                }); */
 
 
             }

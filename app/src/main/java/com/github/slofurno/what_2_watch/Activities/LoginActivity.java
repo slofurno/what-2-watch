@@ -17,6 +17,7 @@ import android.widget.EditText;
 import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
 import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
 import com.github.slofurno.what_2_watch.R;
+import com.github.slofurno.what_2_watch.UserState;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -82,10 +83,10 @@ public class LoginActivity extends Activity {
 
     public void TryLogin(){
 
-        new AsyncTask<String, Void, Void>(){
+        new AsyncTask<String, Void, String>(){
             @Override
-            protected Void doInBackground(String... urls) {
-
+            protected String doInBackground(String... urls) {
+                InputStream is = null;
                 try {
                     URL url = new URL(urls[0]);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -102,16 +103,42 @@ public class LoginActivity extends Activity {
                         ChangeActs();
                     }
 
+                    is = conn.getInputStream();
+
+                    // Convert the InputStream into a string
+                    String contentAsString = readIt(is);
+                    return contentAsString;
+
 
                 } catch (IOException e) {
+                    return null;
+                }
+
+
+            }
+
+            @Override
+            protected void onPostExecute(final String result) {
+
+                if (result!=null) {
+
+                    JsonReader reader = new JsonReader(new StringReader(result));
+                    reader.setLenient(true);
+                    Gson gson = new Gson();
+                    Actor[] actors = gson.fromJson(reader, Actor[].class);
+
+                    for(int i = 0; i < actors.length;i++){
+                        UserState.selectedActors.add(actors[i].ActorId);
+                        UserState.addedActors.add(actors[i].ActorId);
+                        UserState.myActors.add(actors[i]);
+                    }
 
                 }
 
-                return null;
             }
 
 
-        }.execute("http://gdf3.com:555/api/users/"+mAccount.UserId+"/test");
+        }.execute("http://gdf3.com:555/api/users/"+mAccount.UserId+"/actors");
     }
 
     public void CreateAccount(String email){

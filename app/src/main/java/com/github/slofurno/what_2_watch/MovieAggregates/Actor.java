@@ -23,6 +23,6 @@ public class Actor
     }
 
     public String toString(){
-        return First + " " + Last;
+        return First + "ZZ " + Last;
     }
 }
