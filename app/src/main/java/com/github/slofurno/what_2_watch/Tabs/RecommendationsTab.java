@@ -101,6 +101,10 @@ public class RecommendationsTab extends Fragment {
                 Gson gson =new Gson();
                 List<Movie> movies = gson.fromJson(reader,new TypeToken<List<Movie>>(){}.getType());
 
+                if (getActivity()==null){
+                    return;
+                }
+
                 ArrayAdapter<Movie> adapter = new ArrayAdapter<Movie>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, movies);
                 listview.setAdapter(adapter);
 

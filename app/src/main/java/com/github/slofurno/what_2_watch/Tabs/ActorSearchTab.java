@@ -60,6 +60,7 @@ public class ActorSearchTab extends Fragment {
 
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -73,6 +74,8 @@ public class ActorSearchTab extends Fragment {
                 // Perform action on click
                 EditText actorname = (EditText) rootView.findViewById(R.id.actorname);
                 String name = actorname.getText().toString();
+
+
                 GetActors("http://gdf3.com:555/api/actors/"+name);
             }
         });
@@ -82,9 +85,9 @@ public class ActorSearchTab extends Fragment {
         return rootView;
     }
 
-    public void GetActors(String url){
+    public AsyncTask GetActors(String url){
 
-        new AsyncTask<String, Void, String>(){
+        AsyncTask task = new AsyncTask<String, Void, String>(){
             @Override
             protected String doInBackground(String... urls) {
 
@@ -102,6 +105,10 @@ public class ActorSearchTab extends Fragment {
                 reader.setLenient(true);
                 Gson gson =new Gson();
                 List<Actor> actors = gson.fromJson(reader,new TypeToken<List<Actor>>(){}.getType());
+
+                if (getActivity()==null){
+                    return;
+                }
 
                 ArrayAdapter<Actor> adapter = new ArrayAdapter<Actor>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, actors);
                 listview.setAdapter(adapter);
@@ -136,6 +143,8 @@ public class ActorSearchTab extends Fragment {
 
             }
         }.execute(url);
+
+        return task;
 
     }
 
