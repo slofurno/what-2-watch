@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.github.slofurno.what_2_watch.Activities.LoginActivity;
+import com.github.slofurno.what_2_watch.Activities.MainActivity;
 import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
 import com.github.slofurno.what_2_watch.R;
 import com.google.gson.Gson;
@@ -46,6 +48,7 @@ public class ActorSearchTab extends Fragment {
      * number.
      */
     public static ActorSearchTab newInstance(int sectionNumber) {
+
         ActorSearchTab fragment = new ActorSearchTab();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
@@ -121,7 +124,7 @@ public class ActorSearchTab extends Fragment {
                                 }
                             }
 
-                        }.execute("http://gdf3.com:555/api/users/3/actors/"+actor.ActorId);
+                        }.execute("http://gdf3.com:555/api/users/" + LoginActivity.mAccount.UserId + "/actors/"+actor.ActorId);
 
                         //Boolean prev = listView.isItemChecked(position);
                         //Boolean newval = !prev;
@@ -144,6 +147,7 @@ public class ActorSearchTab extends Fragment {
             conn.setReadTimeout(10000 /* milliseconds */);
             conn.setConnectTimeout(15000 /* milliseconds */);
             conn.setRequestMethod("GET");
+            conn.setRequestProperty("Authorization", LoginActivity.mAccount.AccountToken);
             conn.setDoInput(true);
             // Starts the query
             conn.connect();
@@ -166,6 +170,7 @@ public class ActorSearchTab extends Fragment {
             conn.setReadTimeout(10000 /* milliseconds */);
             conn.setConnectTimeout(15000 /* milliseconds */);
             conn.setRequestMethod("GET");
+            conn.setRequestProperty("Authorization", LoginActivity.mAccount.AccountToken);
             conn.setDoInput(true);
             // Starts the query
             conn.connect();

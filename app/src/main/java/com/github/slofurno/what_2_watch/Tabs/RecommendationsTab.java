@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.github.slofurno.what_2_watch.Activities.LoginActivity;
+import com.github.slofurno.what_2_watch.Activities.MainActivity;
 import com.github.slofurno.what_2_watch.MovieAggregates.Movie;
 import com.github.slofurno.what_2_watch.R;
 import com.google.gson.Gson;
@@ -67,13 +69,13 @@ public class RecommendationsTab extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                GetMovies("http://gdf3.com:555/api/users/3/movies");
+                GetMovies("http://gdf3.com:555/api/users/" + LoginActivity.mAccount.UserId + "/movies");
             }
         });
         //adapter = new ArrayAdapter<Movie>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1,movies);
 
         // listview.setAdapter(adapter);
-        GetMovies("http://gdf3.com:555/api/users/3/movies");
+        GetMovies("http://gdf3.com:555/api/users/" + LoginActivity.mAccount.UserId + "/movies");
         return rootView;
     }
 
@@ -118,6 +120,7 @@ public class RecommendationsTab extends Fragment {
             conn.setReadTimeout(10000 /* milliseconds */);
             conn.setConnectTimeout(15000 /* milliseconds */);
             conn.setRequestMethod("GET");
+            conn.setRequestProperty("Authorization", LoginActivity.mAccount.AccountToken);
             conn.setDoInput(true);
             // Starts the query
             conn.connect();

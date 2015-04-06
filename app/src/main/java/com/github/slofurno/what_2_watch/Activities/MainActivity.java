@@ -2,12 +2,15 @@ package com.github.slofurno.what_2_watch.Activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.app.Fragment;
 import android.view.Window;
 
+import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
 import com.github.slofurno.what_2_watch.R;
 import com.github.slofurno.what_2_watch.Tabs.ActorSearchTab;
 import com.github.slofurno.what_2_watch.Tabs.RecommendationsTab;
@@ -21,12 +24,21 @@ public class MainActivity extends Activity {
     Fragment mActorSearchFragment = new ActorSearchTab();
     Fragment mWatchedFragment = new WatchedMoviesTab();
 
+    //static public UserAccount mAccount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_main);
 
+        Intent intent = getIntent();
+/*
+        mAccount= new UserAccount();
+        mAccount.AccountToken=intent.getStringExtra("AccountToken");
+        mAccount.Email = intent.getStringExtra("Email");
+        mAccount.UserId = intent.getIntExtra("UserId", 0);
+*/
         ActionBar actionBar = getActionBar();
 
         actionBar.setDisplayShowHomeEnabled(false);
