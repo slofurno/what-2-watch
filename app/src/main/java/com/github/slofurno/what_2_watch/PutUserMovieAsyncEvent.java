@@ -1,18 +1,17 @@
 package com.github.slofurno.what_2_watch;
 
 import com.github.slofurno.what_2_watch.MovieAggregates.Movie;
-import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
 
-public class PutUserAccountAsyncEvent {
+public class PutUserMovieAsyncEvent {
     private int responseCode;
-    private UserAccount result;
+    private Movie result;
 
-    public PutUserAccountAsyncEvent(UserAccount result, int responseCode) {
+    public PutUserMovieAsyncEvent(Movie result, int responseCode) {
         this.result = result;
         this.responseCode=responseCode;
     }
 
-    public UserAccount getResult() {
+    public Movie getResult() {
         return result;
     }
 
@@ -20,4 +19,3 @@ public class PutUserAccountAsyncEvent {
         return responseCode;
     }
 }
-

@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import com.github.slofurno.what_2_watch.Activities.LoginActivity;
 import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
+import com.github.slofurno.what_2_watch.MovieAggregates.Movie;
 import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

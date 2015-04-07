@@ -23,19 +23,9 @@ import com.github.slofurno.what_2_watch.PutUserAccountAsync;
 import com.github.slofurno.what_2_watch.PutUserAccountAsyncEvent;
 import com.github.slofurno.what_2_watch.R;
 import com.github.slofurno.what_2_watch.UserState;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
+
 import com.squareup.otto.Subscribe;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
 public class LoginActivity extends Activity {

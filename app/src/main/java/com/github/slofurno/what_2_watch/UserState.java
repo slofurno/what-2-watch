@@ -14,6 +14,7 @@ public class UserState {
 
     public static HashSet<Integer> selectedActors = new HashSet<>();
     public static HashSet<Integer> addedActors = new HashSet<>();
+    public static HashSet<Integer> selectedMovies = new HashSet<>();
     public static List<Actor> myActors = new ArrayList<>();
     public UserAccount mUserAccount = new UserAccount();
 

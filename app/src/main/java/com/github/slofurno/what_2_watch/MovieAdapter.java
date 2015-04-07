@@ -5,31 +5,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.CheckedTextView;
-import android.widget.CompoundButton;
-import android.widget.TextView;
 
-import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
 import com.github.slofurno.what_2_watch.MovieAggregates.Movie;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
-/**
- * Created by slofurno on 4/6/2015.
- */
-public class ActorAdapter extends ArrayAdapter<Actor> {
+public class MovieAdapter extends ArrayAdapter<Movie> {
 
     LayoutInflater mInflater;
-    List<Actor> mActors;
+    List<Movie> mMovies;
 
-    public ActorAdapter(Context context, List<Actor> actors) {
-        super(context, R.layout.actor_view, actors);
+    public MovieAdapter(Context context, List<Movie> movies) {
+        super(context, R.layout.actor_view, movies);
         mInflater= (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mActors=actors;
+        mMovies=movies;
     }
 
     @Override
@@ -40,14 +31,14 @@ public class ActorAdapter extends ArrayAdapter<Actor> {
             view = mInflater.inflate(R.layout.actor_view, parent, false);
         }
 
-        Actor actor = getItem(position);
-        Integer actorid = new Integer(actor.ActorId);
+        Movie movie = getItem(position);
+        Integer movieId = new Integer(movie.MovieId);
 
         CheckedTextView checktextview = (CheckedTextView)view.findViewById(R.id.actor1);
-       // CheckBox isFavorited = (CheckBox)view.findViewById(R.id.isFavorited);
+        // CheckBox isFavorited = (CheckBox)view.findViewById(R.id.isFavorited);
 
-        checktextview.setText(actor.First + " " + actor.Last);
-        if (UserState.selectedActors.contains(actorid)){
+        checktextview.setText(movie.toString());
+        if (UserState.selectedMovies.contains(movieId)){
             checktextview.setChecked(true);
         }
         else{
@@ -58,5 +49,3 @@ public class ActorAdapter extends ArrayAdapter<Actor> {
 
     }
 }
-
-

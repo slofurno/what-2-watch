@@ -8,19 +8,31 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.ListView;
 
 import com.github.slofurno.what_2_watch.Activities.LoginActivity;
 import com.github.slofurno.what_2_watch.Activities.MainActivity;
+import com.github.slofurno.what_2_watch.DeleteUserMovieAsync;
+import com.github.slofurno.what_2_watch.GetUserMoviesAsync;
+import com.github.slofurno.what_2_watch.GetUserMoviesAsyncEvent;
+import com.github.slofurno.what_2_watch.MovieAdapter;
+import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
 import com.github.slofurno.what_2_watch.MovieAggregates.Movie;
 import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
+import com.github.slofurno.what_2_watch.OttoBus;
+import com.github.slofurno.what_2_watch.PatchUserActorsAsync;
+import com.github.slofurno.what_2_watch.PutUserMovieAsync;
+import com.github.slofurno.what_2_watch.PutUserMovieAsyncEvent;
 import com.github.slofurno.what_2_watch.R;
 import com.github.slofurno.what_2_watch.UserState;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.squareup.otto.Subscribe;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,10 +52,10 @@ public class RecommendationsTab extends Fragment {
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
     private ListView listview;
+    private View rootView;
     private ArrayAdapter<Movie> adapter;
     private List<Movie> movies;
     private Context context;
-    private View rootView;
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -73,100 +85,86 @@ public class RecommendationsTab extends Fragment {
                 // Perform action on click
                 UserState userState = UserState.getInstance();
                 UserAccount ua = userState.mUserAccount;
-                GetMovies("http://gdf3.com:555/api/users/" + ua.UserId + "/movies");
+                GetMovies();
             }
         });
         //adapter = new ArrayAdapter<Movie>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1,movies);
 
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    final int position, long id) {
+
+                Movie movie = (Movie)listview.getItemAtPosition(position);
+                CheckedTextView cv = (CheckedTextView)view;
+
+                if (UserState.selectedMovies.contains(movie.MovieId)){
+                    UserState.selectedMovies.remove(movie.MovieId);
+                    new DeleteUserMovieAsync(movie.MovieId).execute();
+                    //UserState.myActors.remove(actor);
+                    cv.setChecked(false);
+                    //listview.setItemChecked(position,false);
+                }
+                else {
+                    UserState.selectedMovies.add(movie.MovieId);
+                    new PutUserMovieAsync(movie.MovieId).execute();
+                    cv.setChecked(true);
+                    //listview.setItemChecked(position,true);
+                }
+
+
+
+            }
+
+        });
+
+
         UserState userState = UserState.getInstance();
         UserAccount ua = userState.mUserAccount;
         // listview.setAdapter(adapter);
-        GetMovies("http://gdf3.com:555/api/users/" + ua.UserId + "/movies");
+        GetMovies();
+        OttoBus.getInstance().register(this);
+
         return rootView;
     }
 
-    public void GetMovies(String url){
-
-
-        new AsyncTask<String, Void, String>(){
-            @Override
-            protected String doInBackground(String... urls) {
-
-                try {
-                    return downloadUrl(urls[0]);
-                } catch (IOException e) {
-                    return "Unable to retrieve web page. URL may be invalid.";
-                }
-            }
-
-            @Override
-            protected void onPostExecute(final String result) {
-
-                JsonReader reader = new JsonReader(new StringReader(result));
-                reader.setLenient(true);
-                Gson gson =new Gson();
-                List<Movie> movies = gson.fromJson(reader,new TypeToken<List<Movie>>(){}.getType());
-
-                if (getActivity()==null){
-                    return;
-                }
-
-                ArrayAdapter<Movie> adapter = new ArrayAdapter<Movie>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, movies);
-                listview.setAdapter(adapter);
-
-            }
-        }.execute(url);
-
+    public void GetMovies(){
+        new GetUserMoviesAsync().execute();
     }
 
-    private String downloadUrl(String myurl) throws IOException {
-        InputStream is = null;
-        // Only display the first 500 characters of the retrieved
-        // web page content.
+    @Subscribe
+    public void putUserMovieResult(PutUserMovieAsyncEvent event) {
 
-        try {
-            URL url = new URL(myurl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000 /* milliseconds */);
-            conn.setConnectTimeout(15000 /* milliseconds */);
-            conn.setRequestMethod("GET");
+        if (event.getResponseCode()==200){
 
-            UserState userState = UserState.getInstance();
-            UserAccount ua = userState.mUserAccount;
+            Movie movie = event.getResult();
 
-            conn.setRequestProperty("Authorization", ua.AccountToken);
-            conn.setDoInput(true);
-            // Starts the query
-            conn.connect();
-            int response = conn.getResponseCode();
-            Log.d("httpreq", "The response is: " + response);
+            //MovieAdapter adapter = new MovieAdapter(getActivity().getApplicationContext(), movies);
+            //listview.setAdapter(adapter);
 
-            is = conn.getInputStream();
-
-            // Convert the InputStream into a string
-            String contentAsString = readIt(is);
-            return contentAsString;
-
-            // Makes sure that the InputStream is closed after the app is
-            // finished using it.
-        } finally {
-            if (is != null) {
-                is.close();
-            }
         }
+
     }
 
-    public static String readIt(InputStream is) throws IOException, UnsupportedEncodingException {
+    @Subscribe
+    public void getUserActorsResult(GetUserMoviesAsyncEvent event) {
 
-        BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-        String line;
-        StringBuffer response = new StringBuffer();
-        while((line = rd.readLine()) != null) {
-            response.append(line);
+        if (event.getResponseCode()==200){
+
+            List<Movie> movies = event.getResult();
+
+            MovieAdapter adapter = new MovieAdapter(getActivity().getApplicationContext(), movies);
+            listview.setAdapter(adapter);
+
         }
-        rd.close();
-        return response.toString();
 
     }
+
+    @Override public void onDestroy() {
+        OttoBus.getInstance().unregister(this);
+        super.onDestroy();
+    }
+
+
 
 }
