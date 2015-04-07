@@ -1,6 +1,7 @@
 package com.github.slofurno.what_2_watch;
 
 import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
+import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -27,9 +28,9 @@ public class PutUserAccountAsync extends RestApiAsync {
         JsonReader reader = new JsonReader(new StringReader(result));
         reader.setLenient(true);
         Gson gson = new Gson();
-        List<Actor> actors = gson.fromJson(reader, new TypeToken<ArrayList<Actor>>(){}.getType());
+        UserAccount ua = gson.fromJson(reader, UserAccount.class);
 
-        OttoBus.getInstance().post(new GetUserActorsAsyncEvent(actors, mResponseCode));
+        OttoBus.getInstance().post(new PutUserAccountAsyncEvent(ua, mResponseCode));
     }
 }
 

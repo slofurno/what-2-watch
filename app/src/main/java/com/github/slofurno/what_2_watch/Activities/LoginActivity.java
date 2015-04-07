@@ -127,7 +127,11 @@ public class LoginActivity extends Activity {
             SharedPreferences.Editor settings = getPreferences(0).edit();
 
             UserState userState = UserState.getInstance();
-            userState.mUserAccount = ua;
+            UserAccount mua = userState.mUserAccount;
+
+            mua.UserId=ua.UserId;
+            mua.Email=ua.Email;
+            mua.AccountToken=ua.AccountToken;
 
             settings.putString("Email", ua.Email);
             settings.putString("AccountToken", ua.AccountToken);
