@@ -14,13 +14,19 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
+import com.github.slofurno.what_2_watch.GetUserActorsAsync;
+import com.github.slofurno.what_2_watch.GetUserActorsAsyncEvent;
 import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
 import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
+import com.github.slofurno.what_2_watch.OttoBus;
+import com.github.slofurno.what_2_watch.PutUserAccountAsync;
+import com.github.slofurno.what_2_watch.PutUserAccountAsyncEvent;
 import com.github.slofurno.what_2_watch.R;
 import com.github.slofurno.what_2_watch.UserState;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.squareup.otto.Subscribe;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,7 +40,6 @@ import java.util.List;
 
 public class LoginActivity extends Activity {
 
-    public static UserAccount mAccount;
     private String AccountToken;
     private int UserId;
     private String Email;
@@ -44,18 +49,22 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         SharedPreferences settings = getPreferences(0);
+        UserState userState = UserState.getInstance();
+        //TODO: refactor login to take and return a UA,
+        UserAccount ua = userState.mUserAccount;
 
-        mAccount=new UserAccount();
+        ua.AccountToken = settings.getString("AccountToken",null);
+        ua.Email=settings.getString("Email",null);
+        ua.UserId=settings.getInt("UserId",0);
 
-        mAccount.AccountToken=settings.getString("AccountToken",null);
-        mAccount.Email=settings.getString("Email",null);
-        mAccount.UserId=settings.getInt("UserId",0);
+        setContentView(R.layout.activity_login);
 
-        if (mAccount.AccountToken!=null) {
+        if (ua.AccountToken!=null) {
             TryLogin();
         }
 
-        setContentView(R.layout.activity_login);
+        OttoBus.getInstance().register(this);
+
     }
 
 
@@ -82,104 +91,64 @@ public class LoginActivity extends Activity {
     }
 
     public void TryLogin(){
+        new GetUserActorsAsync().execute();
+    }
 
-        new AsyncTask<String, Void, String>(){
-            @Override
-            protected String doInBackground(String... urls) {
-                InputStream is = null;
-                try {
-                    URL url = new URL(urls[0]);
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setReadTimeout(10000 /* milliseconds */);
-                    conn.setConnectTimeout(15000 /* milliseconds */);
-                    conn.setRequestMethod("GET");
-                    conn.setRequestProperty("Authorization", mAccount.AccountToken);
-                    conn.setDoInput(true);
-                    // Starts the query
-                    conn.connect();
-                    int response = conn.getResponseCode();
+    @Override protected void onDestroy() {
+        OttoBus.getInstance().unregister(this);
+        super.onDestroy();
+    }
 
-                    if (response==200){
-                        ChangeActs();
-                    }
+    @Subscribe
+    public void getUserActorsResult(GetUserActorsAsyncEvent event) {
 
-                    is = conn.getInputStream();
+        if (event.getResponseCode()==200){
 
-                    // Convert the InputStream into a string
-                    String contentAsString = readIt(is);
-                    return contentAsString;
+            List<Actor> actors = event.getResult();
 
-
-                } catch (IOException e) {
-                    return null;
-                }
-
-
+            for(int i = 0; i < actors.size();i++){
+                UserState.selectedActors.add(actors.get(i).ActorId);
+                UserState.addedActors.add(actors.get(i).ActorId);
+                UserState.myActors.add(actors.get(i));
             }
 
-            @Override
-            protected void onPostExecute(final String result) {
+            ChangeActs();
+        }
 
-                if (result!=null) {
+    }
 
-                    JsonReader reader = new JsonReader(new StringReader(result));
-                    reader.setLenient(true);
-                    Gson gson = new Gson();
-                    Actor[] actors = gson.fromJson(reader, Actor[].class);
+    @Subscribe
+    public void putUserAccountResult(PutUserAccountAsyncEvent event){
 
-                    for(int i = 0; i < actors.length;i++){
-                        UserState.selectedActors.add(actors[i].ActorId);
-                        UserState.addedActors.add(actors[i].ActorId);
-                        UserState.myActors.add(actors[i]);
-                    }
+        UserAccount ua = event.getResult();
 
-                }
+        if (event.getResponseCode()==200) {
 
-            }
+            SharedPreferences.Editor settings = getPreferences(0).edit();
 
+            UserState userState = UserState.getInstance();
+            userState.mUserAccount = ua;
 
-        }.execute("http://gdf3.com:555/api/users/"+mAccount.UserId+"/actors");
+            settings.putString("Email", ua.Email);
+            settings.putString("AccountToken", ua.AccountToken);
+            settings.putInt("UserId", ua.UserId);
+
+            settings.apply();
+
+            TryLogin();
+        }
+
     }
 
     public void CreateAccount(String email){
 
-        new AsyncTask<String, Void, String>(){
-            @Override
-            protected String doInBackground(String... urls) {
+        UserState userState = UserState.getInstance();
+        userState.mUserAccount.Email=email;
+        new PutUserAccountAsync().execute();
 
-                try {
-                    return downloadUrl(urls[0]);
-                } catch (IOException e) {
-                    return "Unable to retrieve web page. URL may be invalid.";
-                }
-            }
-
-            @Override
-            protected void onPostExecute(final String result) {
-
-                if (result.length()>1) {
-
-                    JsonReader reader = new JsonReader(new StringReader(result));
-                    reader.setLenient(true);
-                    Gson gson = new Gson();
-                    UserAccount ua = gson.fromJson(reader, UserAccount.class);
-
-                    SharedPreferences.Editor settings = getPreferences(0).edit();
-
-                    mAccount = ua;
-                    settings.putString("Email", ua.Email);
-                    settings.putString("AccountToken", ua.AccountToken);
-                    settings.putInt("UserId", ua.UserId);
-
-                    settings.apply();
-                }
-
-                TryLogin();
-
-            }
-        }.execute("http://gdf3.com:555/api/users/create/" + email);
 
     }
+
 
     public void ChangeActs(){
 
@@ -199,54 +168,4 @@ public class LoginActivity extends Activity {
 
     }
 
-    private String downloadUrl(String myurl) throws IOException {
-        InputStream is = null;
-        // Only display the first 500 characters of the retrieved
-        // web page content.
-
-        try {
-            URL url = new URL(myurl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000 /* milliseconds */);
-            conn.setConnectTimeout(15000 /* milliseconds */);
-            conn.setRequestMethod("GET");
-            conn.setDoInput(true);
-            // Starts the query
-            conn.connect();
-            int response = conn.getResponseCode();
-
-            if (response!=200){
-                return "";
-            }
-
-            is = conn.getInputStream();
-
-            // Convert the InputStream into a string
-            String contentAsString = readIt(is);
-
-            Log.d("url", myurl);
-            Log.d("content", contentAsString);
-            return contentAsString;
-
-            // Makes sure that the InputStream is closed after the app is
-            // finished using it.
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-        }
-    }
-
-    public static String readIt(InputStream is) throws IOException, UnsupportedEncodingException {
-
-        BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-        String line;
-        StringBuffer response = new StringBuffer();
-        while((line = rd.readLine()) != null) {
-            response.append(line);
-        }
-        rd.close();
-        return response.toString();
-
-    }
 }
