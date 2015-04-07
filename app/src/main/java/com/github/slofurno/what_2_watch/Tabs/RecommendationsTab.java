@@ -68,10 +68,6 @@ public class RecommendationsTab extends Fragment {
         return fragment;
     }
 
-    public RecommendationsTab() {
-
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -111,13 +107,8 @@ public class RecommendationsTab extends Fragment {
                     cv.setChecked(true);
                     //listview.setItemChecked(position,true);
                 }
-
-
-
             }
-
         });
-
 
         UserState userState = UserState.getInstance();
         UserAccount ua = userState.mUserAccount;
@@ -136,14 +127,10 @@ public class RecommendationsTab extends Fragment {
     public void putUserMovieResult(PutUserMovieAsyncEvent event) {
 
         if (event.getResponseCode()==200){
-
             Movie movie = event.getResult();
-
             //MovieAdapter adapter = new MovieAdapter(getActivity().getApplicationContext(), movies);
             //listview.setAdapter(adapter);
-
         }
-
     }
 
     @Subscribe
@@ -152,19 +139,13 @@ public class RecommendationsTab extends Fragment {
         if (event.getResponseCode()==200){
 
             List<Movie> movies = event.getResult();
-
             MovieAdapter adapter = new MovieAdapter(getActivity().getApplicationContext(), movies);
             listview.setAdapter(adapter);
-
         }
-
     }
 
     @Override public void onDestroy() {
         OttoBus.getInstance().unregister(this);
         super.onDestroy();
     }
-
-
-
 }

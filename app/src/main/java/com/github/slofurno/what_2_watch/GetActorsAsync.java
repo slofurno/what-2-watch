@@ -1,5 +1,7 @@
 package com.github.slofurno.what_2_watch;
 
+import android.os.AsyncTask;
+
 import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -37,3 +39,4 @@ public class GetActorsAsync extends RestApiAsync {
         OttoBus.getInstance().post(new GetActorsAsyncEvent(actors, mResponseCode));
     }
 }
+

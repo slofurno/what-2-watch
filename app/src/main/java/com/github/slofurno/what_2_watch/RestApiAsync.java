@@ -46,8 +46,6 @@ public abstract class RestApiAsync extends AsyncTask<Void, Void, String> {
         } catch (IOException e) {
             return null;
         }
-
-
     }
 
     protected String readToEnd(InputStream is) throws IOException, UnsupportedEncodingException {
@@ -60,7 +58,5 @@ public abstract class RestApiAsync extends AsyncTask<Void, Void, String> {
         }
         rd.close();
         return response.toString();
-
     }
-
 }

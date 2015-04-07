@@ -36,6 +36,27 @@
             android:inputType="textEmailAddress"
             android:layout_above="@id/searchbutton"/>
 
+        <ProgressBar
+            android:id="@+id/loginprogress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"
+            />
+
+        <TextView
+            android:id="@+id/logintext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="logging you in"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:gravity="center"
+            android:layout_above="@id/loginprogress"
+            android:visibility="invisible"/>
+
+
 
 
         </RelativeLayout>

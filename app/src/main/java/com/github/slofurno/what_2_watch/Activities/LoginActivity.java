@@ -12,8 +12,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 
+import com.github.slofurno.what_2_watch.AppreciateDenzelTask;
+import com.github.slofurno.what_2_watch.AppreciateDenzelTaskEvent;
 import com.github.slofurno.what_2_watch.GetUserActorsAsync;
 import com.github.slofurno.what_2_watch.GetUserActorsAsyncEvent;
 import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
@@ -38,6 +41,8 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        OttoBus.getInstance().register(this);
+
         SharedPreferences settings = getPreferences(0);
         UserState userState = UserState.getInstance();
         //TODO: refactor login to take and return a UA,
@@ -52,11 +57,7 @@ public class LoginActivity extends Activity {
         if (ua.AccountToken!=null) {
             TryLogin();
         }
-
-        OttoBus.getInstance().register(this);
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,6 +82,12 @@ public class LoginActivity extends Activity {
     }
 
     public void TryLogin(){
+
+        findViewById(R.id.email).setVisibility(View.INVISIBLE);
+        findViewById(R.id.searchbutton).setVisibility(View.INVISIBLE);
+        findViewById(R.id.loginprogress).setVisibility(View.VISIBLE);
+        findViewById(R.id.logintext).setVisibility(View.VISIBLE);
+
         new GetUserActorsAsync().execute();
     }
 
@@ -102,10 +109,17 @@ public class LoginActivity extends Activity {
                 UserState.myActors.add(actors.get(i));
             }
 
-            ChangeActs();
+            new AppreciateDenzelTask().execute();
         }
-
     }
+
+
+    @Subscribe
+    public void changeActResult(AppreciateDenzelTaskEvent event){
+
+        ChangeActs();
+    }
+
 
     @Subscribe
     public void putUserAccountResult(PutUserAccountAsyncEvent event){
@@ -131,7 +145,6 @@ public class LoginActivity extends Activity {
 
             TryLogin();
         }
-
     }
 
     public void CreateAccount(String email){
@@ -139,10 +152,7 @@ public class LoginActivity extends Activity {
         UserState userState = UserState.getInstance();
         userState.mUserAccount.Email=email;
         new PutUserAccountAsync().execute();
-
-
     }
-
 
     public void ChangeActs(){
 
@@ -157,9 +167,6 @@ public class LoginActivity extends Activity {
 
         EditText el = (EditText)findViewById(R.id.email);
         String email = el.getText().toString();
-
         CreateAccount(email);
-
     }
-
 }

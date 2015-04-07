@@ -59,13 +59,8 @@ public class WatchedMoviesTab extends Fragment {
                     cv.setChecked(true);
                     //listview.setItemChecked(position,true);
                 }
-
-
-
             }
-
         });
-
 
         UserState userState = UserState.getInstance();
         UserAccount ua = userState.mUserAccount;
@@ -86,12 +81,9 @@ public class WatchedMoviesTab extends Fragment {
         if (event.getResponseCode()==200){
 
             Movie movie = event.getResult();
-
             //MovieAdapter adapter = new MovieAdapter(getActivity().getApplicationContext(), movies);
             //listview.setAdapter(adapter);
-
         }
-
     }
 
     @Subscribe
@@ -109,9 +101,7 @@ public class WatchedMoviesTab extends Fragment {
 
             MovieAdapter adapter = new MovieAdapter(getActivity().getApplicationContext(), movies);
             listview.setAdapter(adapter);
-
         }
-
     }
 
     @Override public void onDestroy() {
