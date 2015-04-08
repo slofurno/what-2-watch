@@ -2,9 +2,7 @@ package com.github.slofurno.what_2_watch.Tabs;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,35 +12,19 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
 
-import com.github.slofurno.what_2_watch.Activities.LoginActivity;
-import com.github.slofurno.what_2_watch.Activities.MainActivity;
-import com.github.slofurno.what_2_watch.DeleteUserMovieAsync;
-import com.github.slofurno.what_2_watch.GetUserMoviesAsync;
-import com.github.slofurno.what_2_watch.GetUserMoviesAsyncEvent;
-import com.github.slofurno.what_2_watch.MovieAdapter;
-import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
+import com.github.slofurno.what_2_watch.Tasks.DeleteUserMovieAsync;
+import com.github.slofurno.what_2_watch.Tasks.GetUserMoviesAsync;
+import com.github.slofurno.what_2_watch.Events.GetUserMoviesAsyncEvent;
+import com.github.slofurno.what_2_watch.Adapters.MovieAdapter;
 import com.github.slofurno.what_2_watch.MovieAggregates.Movie;
 import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
-import com.github.slofurno.what_2_watch.OttoBus;
-import com.github.slofurno.what_2_watch.PatchUserActorsAsync;
-import com.github.slofurno.what_2_watch.PutUserMovieAsync;
-import com.github.slofurno.what_2_watch.PutUserMovieAsyncEvent;
+import com.github.slofurno.what_2_watch.AppState.OttoBus;
+import com.github.slofurno.what_2_watch.Tasks.PutUserMovieAsync;
+import com.github.slofurno.what_2_watch.Events.PutUserMovieAsyncEvent;
 import com.github.slofurno.what_2_watch.R;
-import com.github.slofurno.what_2_watch.UserState;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
+import com.github.slofurno.what_2_watch.AppState.UserState;
 import com.squareup.otto.Subscribe;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RecommendationsTab extends Fragment {

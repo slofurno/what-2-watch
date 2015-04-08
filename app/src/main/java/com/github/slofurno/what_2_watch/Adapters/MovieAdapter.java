@@ -1,4 +1,4 @@
-package com.github.slofurno.what_2_watch;
+package com.github.slofurno.what_2_watch.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 
 import com.github.slofurno.what_2_watch.MovieAggregates.Movie;
+import com.github.slofurno.what_2_watch.R;
+import com.github.slofurno.what_2_watch.AppState.UserState;
 
 import java.util.List;
 

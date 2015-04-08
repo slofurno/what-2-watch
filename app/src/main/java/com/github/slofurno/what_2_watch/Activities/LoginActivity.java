@@ -3,29 +3,23 @@ package com.github.slofurno.what_2_watch.Activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 
-import com.github.slofurno.what_2_watch.AppreciateDenzelTask;
-import com.github.slofurno.what_2_watch.AppreciateDenzelTaskEvent;
-import com.github.slofurno.what_2_watch.GetUserActorsAsync;
-import com.github.slofurno.what_2_watch.GetUserActorsAsyncEvent;
+import com.github.slofurno.what_2_watch.Tasks.AppreciateDenzelTask;
+import com.github.slofurno.what_2_watch.Events.AppreciateDenzelTaskEvent;
+import com.github.slofurno.what_2_watch.Tasks.GetUserActorsAsync;
+import com.github.slofurno.what_2_watch.Events.GetUserActorsAsyncEvent;
 import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
 import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
-import com.github.slofurno.what_2_watch.OttoBus;
-import com.github.slofurno.what_2_watch.PutUserAccountAsync;
-import com.github.slofurno.what_2_watch.PutUserAccountAsyncEvent;
+import com.github.slofurno.what_2_watch.AppState.OttoBus;
+import com.github.slofurno.what_2_watch.Tasks.PutUserAccountAsync;
+import com.github.slofurno.what_2_watch.Events.PutUserAccountAsyncEvent;
 import com.github.slofurno.what_2_watch.R;
-import com.github.slofurno.what_2_watch.UserState;
+import com.github.slofurno.what_2_watch.AppState.UserState;
 
 import com.squareup.otto.Subscribe;
 

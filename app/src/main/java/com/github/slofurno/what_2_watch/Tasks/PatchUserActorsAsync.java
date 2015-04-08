@@ -1,6 +1,9 @@
-package com.github.slofurno.what_2_watch;
+package com.github.slofurno.what_2_watch.Tasks;
 
 import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
+import com.github.slofurno.what_2_watch.AppState.OttoBus;
+import com.github.slofurno.what_2_watch.Events.PatchUserActorsAsyncEvent;
+import com.github.slofurno.what_2_watch.AppState.UserState;
 
 import java.net.MalformedURLException;
 import java.net.URL;

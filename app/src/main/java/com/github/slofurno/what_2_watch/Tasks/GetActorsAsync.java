@@ -1,8 +1,9 @@
-package com.github.slofurno.what_2_watch;
+package com.github.slofurno.what_2_watch.Tasks;
 
-import android.os.AsyncTask;
-
+import com.github.slofurno.what_2_watch.Events.GetActorsAsyncEvent;
 import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
+import com.github.slofurno.what_2_watch.AppState.OttoBus;
+import com.github.slofurno.what_2_watch.AppState.UserState;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;

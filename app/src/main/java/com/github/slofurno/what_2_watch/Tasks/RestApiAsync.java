@@ -1,8 +1,9 @@
-package com.github.slofurno.what_2_watch;
+package com.github.slofurno.what_2_watch.Tasks;
 
 import android.os.AsyncTask;
 
 import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
+import com.github.slofurno.what_2_watch.AppState.UserState;
 
 import java.io.BufferedReader;
 import java.io.IOException;

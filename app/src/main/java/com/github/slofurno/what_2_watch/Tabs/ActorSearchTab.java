@@ -2,10 +2,7 @@ package com.github.slofurno.what_2_watch.Tabs;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,33 +12,17 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.github.slofurno.what_2_watch.Activities.LoginActivity;
-import com.github.slofurno.what_2_watch.Activities.MainActivity;
-import com.github.slofurno.what_2_watch.ActorAdapter;
-import com.github.slofurno.what_2_watch.GetActorsAsync;
-import com.github.slofurno.what_2_watch.GetActorsAsyncEvent;
+import com.github.slofurno.what_2_watch.Adapters.ActorAdapter;
+import com.github.slofurno.what_2_watch.Tasks.GetActorsAsync;
+import com.github.slofurno.what_2_watch.Events.GetActorsAsyncEvent;
 import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
-import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
-import com.github.slofurno.what_2_watch.OttoBus;
-import com.github.slofurno.what_2_watch.PatchUserActorsAsync;
-import com.github.slofurno.what_2_watch.PutUserAccountAsyncEvent;
+import com.github.slofurno.what_2_watch.AppState.OttoBus;
+import com.github.slofurno.what_2_watch.Tasks.PatchUserActorsAsync;
 import com.github.slofurno.what_2_watch.R;
-import com.github.slofurno.what_2_watch.UserState;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
+import com.github.slofurno.what_2_watch.AppState.UserState;
 import com.squareup.otto.Subscribe;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
 public class ActorSearchTab extends Fragment {

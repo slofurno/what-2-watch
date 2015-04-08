@@ -1,4 +1,4 @@
-package com.github.slofurno.what_2_watch;
+package com.github.slofurno.what_2_watch.Events;
 
 public class PatchUserActorsAsyncEvent {
     private int responseCode;
