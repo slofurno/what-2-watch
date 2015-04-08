@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.github.slofurno.what_2_watch.Activities.LoginActivity;
 import com.github.slofurno.what_2_watch.Activities.MainActivity;
@@ -71,21 +72,13 @@ public class ActorSearchTab extends Fragment {
         super.onDestroy();
     }
 
-    public ActorSearchTab() {
-
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.actorsearch_layout, container, false);
-
         listview = (ListView)rootView.findViewById(R.id.actorlist);
 
         ActorAdapter adapter = new ActorAdapter(getActivity().getApplicationContext(), UserState.myActors);
-
-        //ArrayAdapter<Actor> adapter = new ArrayAdapter<Actor>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1, actors);
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -98,9 +91,7 @@ public class ActorSearchTab extends Fragment {
 
                 if (UserState.selectedActors.contains(actor.ActorId)){
                     UserState.selectedActors.remove(actor.ActorId);
-                    //UserState.myActors.remove(actor);
                     cv.setChecked(false);
-                    //listview.setItemChecked(position,false);
                 }
                 else {
                     UserState.selectedActors.add(actor.ActorId);
@@ -109,11 +100,9 @@ public class ActorSearchTab extends Fragment {
                         UserState.addedActors.add(actor.ActorId);
                     }
                     cv.setChecked(true);
-                    //listview.setItemChecked(position,true);
                 }
 
                 new PatchUserActorsAsync(actor.ActorId).execute();
-
             }
 
         });
@@ -123,17 +112,14 @@ public class ActorSearchTab extends Fragment {
         Button button = (Button)rootView.findViewById(R.id.searchbutton);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Perform action on click
                 EditText actorname = (EditText) rootView.findViewById(R.id.actorname);
                 String name = actorname.getText().toString();
+                ((EditText) rootView.findViewById(R.id.actorname)).setText("");
                 GetActors(name);
             }
         });
-        //adapter = new ArrayAdapter<Movie>(getActivity().getApplicationContext(),android.R.layout.simple_list_item_1,movies);
 
         OttoBus.getInstance().register(this);
-
-        // listview.setAdapter(adapter);
         return rootView;
     }
 
@@ -151,8 +137,5 @@ public class ActorSearchTab extends Fragment {
             ActorAdapter adapter = new ActorAdapter(getActivity().getApplicationContext(), actors);
             listview.setAdapter(adapter);
         }
-
     }
-
-
 }
