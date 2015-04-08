@@ -2,8 +2,8 @@ package com.github.slofurno.what_2_watch.Tasks;
 
 import android.os.AsyncTask;
 
+import com.github.slofurno.what_2_watch.AppState.AccountManager;
 import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
-import com.github.slofurno.what_2_watch.AppState.UserState;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,19 +14,21 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.inject.Inject;
+
 /**
  * Created by slofurno on 4/7/2015.
  */
 public abstract class RestApiAsync extends AsyncTask<Void, Void, String> {
 
-    protected UserState mUserState = UserState.getInstance();
+    @Inject
+    AccountManager accountManager;
     protected int mResponseCode;
     protected abstract URL getUrl() throws MalformedURLException;
 
     @Override protected String doInBackground(Void... params) {
         InputStream is = null;
-        UserState userState = UserState.getInstance();
-        UserAccount ua = userState.mUserAccount;
+        UserAccount ua = accountManager.getUserAccount();
 
         try {
             URL url = getUrl();

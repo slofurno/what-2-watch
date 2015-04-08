@@ -3,7 +3,7 @@ package com.github.slofurno.what_2_watch.Tasks;
 import com.github.slofurno.what_2_watch.Events.GetUserActorsAsyncEvent;
 import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
 import com.github.slofurno.what_2_watch.AppState.OttoBus;
-import com.github.slofurno.what_2_watch.AppState.UserState;
+import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -20,10 +20,9 @@ import java.util.List;
 
 public class GetUserActorsAsync extends RestApiAsync {
 
-    private UserState mUserState = UserState.getInstance();
-
     @Override protected URL getUrl() throws MalformedURLException {
-        return new URL("http://gdf3.com:555/api/users/"+mUserState.mUserAccount.UserId+"/actors");
+        UserAccount ua = accountManager.getUserAccount();
+        return new URL("http://gdf3.com:555/api/users/"+ua.UserId+"/actors");
     }
 
     @Override protected void onPostExecute(String result) {

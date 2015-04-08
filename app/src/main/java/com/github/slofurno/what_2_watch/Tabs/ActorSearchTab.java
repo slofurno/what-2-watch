@@ -14,18 +14,22 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.github.slofurno.what_2_watch.Adapters.ActorAdapter;
+import com.github.slofurno.what_2_watch.AppState.ActorManager;
 import com.github.slofurno.what_2_watch.Tasks.GetActorsAsync;
 import com.github.slofurno.what_2_watch.Events.GetActorsAsyncEvent;
 import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
 import com.github.slofurno.what_2_watch.AppState.OttoBus;
 import com.github.slofurno.what_2_watch.Tasks.PatchUserActorsAsync;
 import com.github.slofurno.what_2_watch.R;
-import com.github.slofurno.what_2_watch.AppState.UserState;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class ActorSearchTab extends Fragment {
+    @Inject
+    ActorManager actorManager;
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -59,7 +63,7 @@ public class ActorSearchTab extends Fragment {
         rootView = inflater.inflate(R.layout.actorsearch_layout, container, false);
         listview = (ListView)rootView.findViewById(R.id.actorlist);
 
-        ActorAdapter adapter = new ActorAdapter(getActivity().getApplicationContext(), UserState.myActors);
+        ActorAdapter adapter = new ActorAdapter(getActivity().getApplicationContext(), actorManager.getFollowed());
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -70,16 +74,18 @@ public class ActorSearchTab extends Fragment {
                 Actor actor = (Actor)listview.getItemAtPosition(position);
                 CheckedTextView cv = (CheckedTextView)view;
 
-                if (UserState.selectedActors.contains(actor.ActorId)){
-                    UserState.selectedActors.remove(actor.ActorId);
+                if (actorManager.isFollowed(actor)){
+                    actorManager.unfollow(actor);
                     cv.setChecked(false);
                 }
                 else {
-                    UserState.selectedActors.add(actor.ActorId);
+                    actorManager.follow(actor);
+                    /*
                     if (!UserState.addedActors.contains(actor.ActorId)){
                         UserState.myActors.add(actor);
                         UserState.addedActors.add(actor.ActorId);
                     }
+                    */
                     cv.setChecked(true);
                 }
 

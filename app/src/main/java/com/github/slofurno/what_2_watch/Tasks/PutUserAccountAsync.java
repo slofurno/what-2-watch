@@ -3,7 +3,6 @@ package com.github.slofurno.what_2_watch.Tasks;
 import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
 import com.github.slofurno.what_2_watch.AppState.OttoBus;
 import com.github.slofurno.what_2_watch.Events.PutUserAccountAsyncEvent;
-import com.github.slofurno.what_2_watch.AppState.UserState;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
@@ -16,10 +15,14 @@ import java.net.URL;
  */
 public class PutUserAccountAsync extends RestApiAsync {
 
-    private UserState mUserState = UserState.getInstance();
+    private String email;
+
+    public PutUserAccountAsync(String email){
+        email = email;
+    }
 
     @Override protected URL getUrl() throws MalformedURLException {
-        return new URL("http://gdf3.com:555/api/users/create/" + mUserState.mUserAccount.Email);
+        return new URL("http://gdf3.com:555/api/users/create/" + email);
     }
 
     @Override protected void onPostExecute(String result) {

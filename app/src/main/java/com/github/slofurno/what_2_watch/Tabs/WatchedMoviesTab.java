@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
 
+import com.github.slofurno.what_2_watch.AppState.MovieManager;
 import com.github.slofurno.what_2_watch.Tasks.DeleteUserMovieAsync;
 import com.github.slofurno.what_2_watch.Events.GetUserMoviesAsyncEvent;
 import com.github.slofurno.what_2_watch.Tasks.GetUserWatchedMoviesAsync;
@@ -19,21 +20,26 @@ import com.github.slofurno.what_2_watch.AppState.OttoBus;
 import com.github.slofurno.what_2_watch.Tasks.PutUserMovieAsync;
 import com.github.slofurno.what_2_watch.Events.PutUserMovieAsyncEvent;
 import com.github.slofurno.what_2_watch.R;
-import com.github.slofurno.what_2_watch.AppState.UserState;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class WatchedMoviesTab extends Fragment {
 
+    @Inject
+    MovieManager movieManager;
     private ListView listview;
     private View rootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.watchedmovies_layout, container, false);
 
+        OttoBus.getInstance().register(this);
+
+        rootView = inflater.inflate(R.layout.watchedmovies_layout, container, false);
         listview = (ListView)rootView.findViewById(R.id.listView);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -44,15 +50,15 @@ public class WatchedMoviesTab extends Fragment {
                 Movie movie = (Movie)listview.getItemAtPosition(position);
                 CheckedTextView cv = (CheckedTextView)view;
 
-                if (UserState.selectedMovies.contains(movie.MovieId)){
-                    UserState.selectedMovies.remove(movie.MovieId);
+                if (movieManager.hasWatched(movie)){
+                    movieManager.unwatch(movie);
                     new DeleteUserMovieAsync(movie.MovieId).execute();
                     //UserState.myActors.remove(actor);
                     cv.setChecked(false);
                     //listview.setItemChecked(position,false);
                 }
                 else {
-                    UserState.selectedMovies.add(movie.MovieId);
+                    movieManager.watch(movie);
                     new PutUserMovieAsync(movie.MovieId).execute();
                     cv.setChecked(true);
                     //listview.setItemChecked(position,true);
@@ -60,10 +66,8 @@ public class WatchedMoviesTab extends Fragment {
             }
         });
 
-        UserState userState = UserState.getInstance();
-        UserAccount ua = userState.mUserAccount;
 
-        OttoBus.getInstance().register(this);
+
         GetMovies();
 
         return rootView;
@@ -91,10 +95,9 @@ public class WatchedMoviesTab extends Fragment {
 
             List<Movie> movies = event.getResult();
 
-            UserState.selectedMovies.clear();
             //TODO: get this on login
             for (Movie movie : movies){
-                UserState.selectedMovies.add(movie.MovieId);
+               movieManager.watch(movie);
             }
 
             MovieAdapter adapter = new MovieAdapter(getActivity().getApplicationContext(), movies);

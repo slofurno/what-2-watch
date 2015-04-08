@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
 
+import com.github.slofurno.what_2_watch.AppState.MovieManager;
 import com.github.slofurno.what_2_watch.Tasks.DeleteUserMovieAsync;
 import com.github.slofurno.what_2_watch.Tasks.GetUserMoviesAsync;
 import com.github.slofurno.what_2_watch.Events.GetUserMoviesAsyncEvent;
@@ -22,16 +23,19 @@ import com.github.slofurno.what_2_watch.AppState.OttoBus;
 import com.github.slofurno.what_2_watch.Tasks.PutUserMovieAsync;
 import com.github.slofurno.what_2_watch.Events.PutUserMovieAsyncEvent;
 import com.github.slofurno.what_2_watch.R;
-import com.github.slofurno.what_2_watch.AppState.UserState;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class RecommendationsTab extends Fragment {
     /**
      * The fragment argument representing the section number for this
      * fragment.
      */
+    @Inject
+    MovieManager movieManager;
     private static final String ARG_SECTION_NUMBER = "section_number";
     private ListView listview;
     private View rootView;
@@ -61,8 +65,6 @@ public class RecommendationsTab extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                UserState userState = UserState.getInstance();
-                UserAccount ua = userState.mUserAccount;
                 GetMovies();
             }
         });
@@ -76,15 +78,15 @@ public class RecommendationsTab extends Fragment {
                 Movie movie = (Movie)listview.getItemAtPosition(position);
                 CheckedTextView cv = (CheckedTextView)view;
 
-                if (UserState.selectedMovies.contains(movie.MovieId)){
-                    UserState.selectedMovies.remove(movie.MovieId);
+                if (movieManager.hasWatched(movie)){
+                    movieManager.unwatch(movie);
                     new DeleteUserMovieAsync(movie.MovieId).execute();
                     //UserState.myActors.remove(actor);
                     cv.setChecked(false);
                     //listview.setItemChecked(position,false);
                 }
                 else {
-                    UserState.selectedMovies.add(movie.MovieId);
+                    movieManager.watch(movie);
                     new PutUserMovieAsync(movie.MovieId).execute();
                     cv.setChecked(true);
                     //listview.setItemChecked(position,true);
@@ -92,9 +94,6 @@ public class RecommendationsTab extends Fragment {
             }
         });
 
-        UserState userState = UserState.getInstance();
-        UserAccount ua = userState.mUserAccount;
-        // listview.setAdapter(adapter);
         GetMovies();
         OttoBus.getInstance().register(this);
 

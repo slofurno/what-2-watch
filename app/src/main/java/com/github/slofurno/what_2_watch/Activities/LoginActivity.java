@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.github.slofurno.what_2_watch.AppState.AccountManager;
+import com.github.slofurno.what_2_watch.AppState.ActorManager;
 import com.github.slofurno.what_2_watch.Tasks.AppreciateDenzelTask;
 import com.github.slofurno.what_2_watch.Events.AppreciateDenzelTaskEvent;
 import com.github.slofurno.what_2_watch.Tasks.GetUserActorsAsync;
@@ -20,7 +21,6 @@ import com.github.slofurno.what_2_watch.AppState.OttoBus;
 import com.github.slofurno.what_2_watch.Tasks.PutUserAccountAsync;
 import com.github.slofurno.what_2_watch.Events.PutUserAccountAsyncEvent;
 import com.github.slofurno.what_2_watch.R;
-import com.github.slofurno.what_2_watch.AppState.UserState;
 
 import com.squareup.otto.Subscribe;
 
@@ -32,6 +32,8 @@ public class LoginActivity extends Activity {
 
     @Inject
     AccountManager accountManager;
+    @Inject
+    ActorManager actorManager;
     private String AccountToken;
     private int UserId;
     private String Email;
@@ -104,10 +106,8 @@ public class LoginActivity extends Activity {
 
             List<Actor> actors = event.getResult();
 
-            for(int i = 0; i < actors.size();i++){
-                UserState.selectedActors.add(actors.get(i).ActorId);
-                UserState.addedActors.add(actors.get(i).ActorId);
-                UserState.myActors.add(actors.get(i));
+            for(Actor actor:actors){
+                actorManager.follow(actor);
             }
 
             new AppreciateDenzelTask().execute();
@@ -131,13 +131,9 @@ public class LoginActivity extends Activity {
 
             SharedPreferences.Editor settings = getPreferences(0).edit();
 
-            UserState userState = UserState.getInstance();
-            UserAccount mua = userState.mUserAccount;
+            accountManager.setUserAccount(ua);
 
-            mua.UserId=ua.UserId;
-            mua.Email=ua.Email;
-            mua.AccountToken=ua.AccountToken;
-
+            //TODO:maybe save these settings in accountmanager
             settings.putString("Email", ua.Email);
             settings.putString("AccountToken", ua.AccountToken);
             settings.putInt("UserId", ua.UserId);
@@ -150,9 +146,7 @@ public class LoginActivity extends Activity {
 
     public void CreateAccount(String email){
 
-        UserState userState = UserState.getInstance();
-        userState.mUserAccount.Email=email;
-        new PutUserAccountAsync().execute();
+        new PutUserAccountAsync(email).execute();
     }
 
     public void ChangeActs(){

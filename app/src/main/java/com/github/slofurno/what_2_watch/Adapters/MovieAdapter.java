@@ -7,14 +7,19 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 
+import com.github.slofurno.what_2_watch.AppState.ActorManager;
+import com.github.slofurno.what_2_watch.AppState.MovieManager;
 import com.github.slofurno.what_2_watch.MovieAggregates.Movie;
 import com.github.slofurno.what_2_watch.R;
-import com.github.slofurno.what_2_watch.AppState.UserState;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class MovieAdapter extends ArrayAdapter<Movie> {
 
+    @Inject
+    MovieManager movieManager;
     LayoutInflater mInflater;
     List<Movie> mMovies;
 
@@ -40,7 +45,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         // CheckBox isFavorited = (CheckBox)view.findViewById(R.id.isFavorited);
 
         checktextview.setText(movie.toString());
-        if (UserState.selectedMovies.contains(movieId)){
+        if (movieManager.hasWatched(movie)){
             checktextview.setChecked(true);
         }
         else{

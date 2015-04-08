@@ -7,17 +7,22 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 
+import com.github.slofurno.what_2_watch.AppState.AccountManager;
+import com.github.slofurno.what_2_watch.AppState.ActorManager;
 import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
 import com.github.slofurno.what_2_watch.R;
-import com.github.slofurno.what_2_watch.AppState.UserState;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * Created by slofurno on 4/6/2015.
  */
 public class ActorAdapter extends ArrayAdapter<Actor> {
 
+    @Inject
+    ActorManager actorManager;
     LayoutInflater mInflater;
     List<Actor> mActors;
 
@@ -43,7 +48,7 @@ public class ActorAdapter extends ArrayAdapter<Actor> {
        // CheckBox isFavorited = (CheckBox)view.findViewById(R.id.isFavorited);
 
         checktextview.setText(actor.First + " " + actor.Last);
-        if (UserState.selectedActors.contains(actorid)){
+        if (actorManager.isFollowed(actor)){
             checktextview.setChecked(true);
         }
         else{

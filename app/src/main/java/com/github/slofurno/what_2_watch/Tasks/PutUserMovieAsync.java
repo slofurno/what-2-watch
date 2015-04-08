@@ -2,14 +2,14 @@ package com.github.slofurno.what_2_watch.Tasks;
 
 import com.github.slofurno.what_2_watch.AppState.OttoBus;
 import com.github.slofurno.what_2_watch.Events.PutUserMovieAsyncEvent;
-import com.github.slofurno.what_2_watch.AppState.UserState;
+
+import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class PutUserMovieAsync extends RestApiAsync {
 
-    private UserState mUserState = UserState.getInstance();
     private int movieId;
 
     public PutUserMovieAsync(int movieId){
@@ -17,7 +17,8 @@ public class PutUserMovieAsync extends RestApiAsync {
     }
 
     @Override protected URL getUrl() throws MalformedURLException {
-        return new URL("http://gdf3.com:555/api/users/" + mUserState.mUserAccount.UserId + "/movies/" + movieId);
+        UserAccount ua = accountManager.getUserAccount();
+        return new URL("http://gdf3.com:555/api/users/" + ua.UserId + "/movies/" + movieId);
     }
 
     @Override protected void onPostExecute(String result) {
