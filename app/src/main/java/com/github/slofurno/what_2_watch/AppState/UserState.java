@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by slofurno on 4/6/2015.
  */
-public class UserState {
+public class UserStatez {
 
     public static HashSet<Integer> selectedActors = new HashSet<>();
     public static HashSet<Integer> addedActors = new HashSet<>();

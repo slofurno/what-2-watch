@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.github.slofurno.what_2_watch.AppState.AccountManager;
 import com.github.slofurno.what_2_watch.Tasks.AppreciateDenzelTask;
 import com.github.slofurno.what_2_watch.Events.AppreciateDenzelTaskEvent;
 import com.github.slofurno.what_2_watch.Tasks.GetUserActorsAsync;
@@ -25,8 +26,12 @@ import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class LoginActivity extends Activity {
 
+    @Inject
+    AccountManager accountManager;
     private String AccountToken;
     private int UserId;
     private String Email;
@@ -38,13 +43,15 @@ public class LoginActivity extends Activity {
         OttoBus.getInstance().register(this);
 
         SharedPreferences settings = getPreferences(0);
-        UserState userState = UserState.getInstance();
+
         //TODO: refactor login to take and return a UA,
-        UserAccount ua = userState.mUserAccount;
+        UserAccount ua = new UserAccount();
 
         ua.AccountToken = settings.getString("AccountToken",null);
         ua.Email=settings.getString("Email",null);
         ua.UserId=settings.getInt("UserId",0);
+
+        accountManager.setUserAccount(ua);
 
         setContentView(R.layout.activity_login);
 
