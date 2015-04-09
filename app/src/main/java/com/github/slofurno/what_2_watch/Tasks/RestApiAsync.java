@@ -21,9 +21,9 @@ import javax.inject.Inject;
  */
 public abstract class RestApiAsync extends AsyncTask<Void, Void, String> {
 
-    @Inject
-    AccountManager accountManager;
+    AccountManager accountManager = AccountManager.getInstance();
     protected int mResponseCode;
+
     protected abstract URL getUrl() throws MalformedURLException;
 
     @Override protected String doInBackground(Void... params) {

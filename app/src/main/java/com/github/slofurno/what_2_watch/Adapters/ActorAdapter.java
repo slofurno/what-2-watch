@@ -21,13 +21,13 @@ import javax.inject.Inject;
  */
 public class ActorAdapter extends ArrayAdapter<Actor> {
 
-    @Inject
     ActorManager actorManager;
     LayoutInflater mInflater;
     List<Actor> mActors;
 
-    public ActorAdapter(Context context, List<Actor> actors) {
+    public ActorAdapter(Context context, List<Actor> actors, ActorManager actorManager) {
         super(context, R.layout.actor_view, actors);
+        this.actorManager=actorManager;
         mInflater= (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mActors=actors;

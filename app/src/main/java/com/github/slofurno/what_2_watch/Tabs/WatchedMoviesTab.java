@@ -10,6 +10,9 @@ import android.widget.CheckedTextView;
 import android.widget.ListView;
 
 import com.github.slofurno.what_2_watch.AppState.MovieManager;
+import com.github.slofurno.what_2_watch.BaseActivity;
+import com.github.slofurno.what_2_watch.BaseFragment;
+import com.github.slofurno.what_2_watch.MovieApplication;
 import com.github.slofurno.what_2_watch.Tasks.DeleteUserMovieAsync;
 import com.github.slofurno.what_2_watch.Events.GetUserMoviesAsyncEvent;
 import com.github.slofurno.what_2_watch.Tasks.GetUserWatchedMoviesAsync;
@@ -26,7 +29,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class WatchedMoviesTab extends Fragment {
+public class WatchedMoviesTab extends BaseFragment {
 
     @Inject
     MovieManager movieManager;
@@ -36,7 +39,7 @@ public class WatchedMoviesTab extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        ((MovieApplication)((BaseActivity)getActivity()).getApplication()).component().inject(this);
         OttoBus.getInstance().register(this);
 
         rootView = inflater.inflate(R.layout.watchedmovies_layout, container, false);
@@ -100,7 +103,7 @@ public class WatchedMoviesTab extends Fragment {
                movieManager.watch(movie);
             }
 
-            MovieAdapter adapter = new MovieAdapter(getActivity().getApplicationContext(), movies);
+            MovieAdapter adapter = new MovieAdapter(getActivity().getApplicationContext(), movies, movieManager);
             listview.setAdapter(adapter);
         }
     }

@@ -3,9 +3,13 @@ package com.github.slofurno.what_2_watch;
 import android.app.Application;
 
 import com.github.slofurno.what_2_watch.Activities.LoginActivity;
+import com.github.slofurno.what_2_watch.Activities.MainActivity;
 import com.github.slofurno.what_2_watch.AppState.AccountManager;
 import com.github.slofurno.what_2_watch.AppState.ActorManager;
 import com.github.slofurno.what_2_watch.AppState.MovieManager;
+import com.github.slofurno.what_2_watch.Tabs.ActorSearchTab;
+import com.github.slofurno.what_2_watch.Tabs.RecommendationsTab;
+import com.github.slofurno.what_2_watch.Tabs.WatchedMoviesTab;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,6 +28,11 @@ public class MovieApplication extends Application {
         void inject(MovieApplication application);
         void inject(BaseActivity baseActivity);
         void inject(LoginActivity loginActivity);
+        void inject(MainActivity mainActivity);
+        void inject(BaseFragment baseFragment);
+        void inject(WatchedMoviesTab watchedMoviesTab);
+        void inject(RecommendationsTab recommendationsTab);
+        void inject(ActorSearchTab actorSearchTab);
 
     }
 

@@ -13,6 +13,9 @@ import android.widget.CheckedTextView;
 import android.widget.ListView;
 
 import com.github.slofurno.what_2_watch.AppState.MovieManager;
+import com.github.slofurno.what_2_watch.BaseActivity;
+import com.github.slofurno.what_2_watch.BaseFragment;
+import com.github.slofurno.what_2_watch.MovieApplication;
 import com.github.slofurno.what_2_watch.Tasks.DeleteUserMovieAsync;
 import com.github.slofurno.what_2_watch.Tasks.GetUserMoviesAsync;
 import com.github.slofurno.what_2_watch.Events.GetUserMoviesAsyncEvent;
@@ -29,7 +32,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class RecommendationsTab extends Fragment {
+public class RecommendationsTab extends BaseFragment {
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -57,6 +60,7 @@ public class RecommendationsTab extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((MovieApplication)((BaseActivity)getActivity()).getApplication()).component().inject(this);
         rootView = inflater.inflate(R.layout.recommendations_layout, container, false);
 
         listview = (ListView)rootView.findViewById(R.id.listView);
@@ -120,7 +124,7 @@ public class RecommendationsTab extends Fragment {
         if (event.getResponseCode()==200){
 
             List<Movie> movies = event.getResult();
-            MovieAdapter adapter = new MovieAdapter(getActivity().getApplicationContext(), movies);
+            MovieAdapter adapter = new MovieAdapter(getActivity().getApplicationContext(), movies, movieManager);
             listview.setAdapter(adapter);
         }
     }

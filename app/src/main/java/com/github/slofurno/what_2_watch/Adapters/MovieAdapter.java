@@ -18,16 +18,18 @@ import javax.inject.Inject;
 
 public class MovieAdapter extends ArrayAdapter<Movie> {
 
-    @Inject
+
     MovieManager movieManager;
     LayoutInflater mInflater;
     List<Movie> mMovies;
 
-    public MovieAdapter(Context context, List<Movie> movies) {
+
+    public MovieAdapter(Context context, List<Movie> movies, MovieManager movieManager) {
         super(context, R.layout.actor_view, movies);
         mInflater= (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mMovies=movies;
+        this.movieManager=movieManager;
     }
 
     @Override

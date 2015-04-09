@@ -10,13 +10,19 @@ import android.view.MenuItem;
 import android.app.Fragment;
 import android.view.Window;
 
+import com.github.slofurno.what_2_watch.AppState.AccountManager;
+import com.github.slofurno.what_2_watch.AppState.ActorManager;
+import com.github.slofurno.what_2_watch.AppState.MovieManager;
 import com.github.slofurno.what_2_watch.BaseActivity;
 import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
+import com.github.slofurno.what_2_watch.MovieApplication;
 import com.github.slofurno.what_2_watch.R;
 import com.github.slofurno.what_2_watch.Tabs.ActorSearchTab;
 import com.github.slofurno.what_2_watch.Tabs.RecommendationsTab;
 import com.github.slofurno.what_2_watch.Tabs.TabListener;
 import com.github.slofurno.what_2_watch.Tabs.WatchedMoviesTab;
+
+import javax.inject.Inject;
 
 public class MainActivity extends BaseActivity {
 
@@ -25,11 +31,19 @@ public class MainActivity extends BaseActivity {
     Fragment mActorSearchFragment = new ActorSearchTab();
     Fragment mWatchedFragment = new WatchedMoviesTab();
 
+    @Inject
+    ActorManager actorManager;
+    @Inject
+    MovieManager movieManager;
+    @Inject
+    AccountManager accountManager;
+
     //static public UserAccount mAccount;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MovieApplication) getApplication()).component().inject(this);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_main);
 

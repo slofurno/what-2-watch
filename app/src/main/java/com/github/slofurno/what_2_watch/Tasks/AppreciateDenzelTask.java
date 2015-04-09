@@ -9,7 +9,7 @@ public class AppreciateDenzelTask extends AsyncTask<Void,Void,Void> {
 
     @Override protected Void doInBackground(Void... params) {
         try {
-            Thread.sleep(5000);
+            Thread.sleep(500);
             return null;
         } catch (InterruptedException e) {
             e.printStackTrace();

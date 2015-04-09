@@ -15,6 +15,9 @@ import android.widget.ListView;
 
 import com.github.slofurno.what_2_watch.Adapters.ActorAdapter;
 import com.github.slofurno.what_2_watch.AppState.ActorManager;
+import com.github.slofurno.what_2_watch.BaseActivity;
+import com.github.slofurno.what_2_watch.BaseFragment;
+import com.github.slofurno.what_2_watch.MovieApplication;
 import com.github.slofurno.what_2_watch.Tasks.GetActorsAsync;
 import com.github.slofurno.what_2_watch.Events.GetActorsAsyncEvent;
 import com.github.slofurno.what_2_watch.MovieAggregates.Actor;
@@ -27,7 +30,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class ActorSearchTab extends Fragment {
+public class ActorSearchTab extends BaseFragment {
     @Inject
     ActorManager actorManager;
     /**
@@ -61,9 +64,10 @@ public class ActorSearchTab extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.actorsearch_layout, container, false);
+        ((MovieApplication)((BaseActivity)getActivity()).getApplication()).component().inject(this);
         listview = (ListView)rootView.findViewById(R.id.actorlist);
 
-        ActorAdapter adapter = new ActorAdapter(getActivity().getApplicationContext(), actorManager.getFollowed());
+        ActorAdapter adapter = new ActorAdapter(getActivity().getApplicationContext(), actorManager.getFollowed(), actorManager);
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -121,7 +125,7 @@ public class ActorSearchTab extends Fragment {
 
         if (event.getResponseCode()==200) {
 
-            ActorAdapter adapter = new ActorAdapter(getActivity().getApplicationContext(), actors);
+            ActorAdapter adapter = new ActorAdapter(getActivity().getApplicationContext(), actors, actorManager);
             listview.setAdapter(adapter);
         }
     }

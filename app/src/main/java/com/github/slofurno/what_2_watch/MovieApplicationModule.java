@@ -42,7 +42,7 @@ public class MovieApplicationModule {
 
     @Provides @Singleton
     AccountManager provideAccountManager() {
-        return new AccountManager();
+        return AccountManager.getInstance();
     }
 
 }

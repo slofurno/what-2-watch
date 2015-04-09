@@ -38,7 +38,7 @@ public class LoginActivity extends BaseActivity {
     ActorManager actorManager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MovieApplication) getApplication()).component().inject(this);
         OttoBus.getInstance().register(this);
