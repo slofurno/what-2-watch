@@ -11,6 +11,8 @@ import android.widget.EditText;
 
 import com.github.slofurno.what_2_watch.AppState.AccountManager;
 import com.github.slofurno.what_2_watch.AppState.ActorManager;
+import com.github.slofurno.what_2_watch.BaseActivity;
+import com.github.slofurno.what_2_watch.MovieApplication;
 import com.github.slofurno.what_2_watch.Tasks.AppreciateDenzelTask;
 import com.github.slofurno.what_2_watch.Events.AppreciateDenzelTaskEvent;
 import com.github.slofurno.what_2_watch.Tasks.GetUserActorsAsync;
@@ -28,20 +30,17 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends BaseActivity {
 
     @Inject
     AccountManager accountManager;
     @Inject
     ActorManager actorManager;
-    private String AccountToken;
-    private int UserId;
-    private String Email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ((MovieApplication) getApplication()).component().inject(this);
         OttoBus.getInstance().register(this);
 
         SharedPreferences settings = getPreferences(0);
@@ -152,9 +151,6 @@ public class LoginActivity extends Activity {
     public void ChangeActs(){
 
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("Email",Email);
-        intent.putExtra("AccountToken",AccountToken);
-        intent.putExtra("UserId",UserId);
         startActivity(intent);
     }
 

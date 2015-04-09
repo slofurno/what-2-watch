@@ -10,7 +10,7 @@ import javax.inject.Singleton;
 @Singleton
 public class AccountManager {
 
-    private UserAccount userAccount;
+    private UserAccount userAccount = new UserAccount();
 
     public void setUserAccount(UserAccount ua){
         userAccount=ua;

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.app.Fragment;
 import android.view.Window;
 
+import com.github.slofurno.what_2_watch.BaseActivity;
 import com.github.slofurno.what_2_watch.MovieAggregates.UserAccount;
 import com.github.slofurno.what_2_watch.R;
 import com.github.slofurno.what_2_watch.Tabs.ActorSearchTab;
@@ -17,7 +18,7 @@ import com.github.slofurno.what_2_watch.Tabs.RecommendationsTab;
 import com.github.slofurno.what_2_watch.Tabs.TabListener;
 import com.github.slofurno.what_2_watch.Tabs.WatchedMoviesTab;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
 
     ActionBar.Tab mRecommendTab, mActorSearchTab, mWatchedTab;
     Fragment mRecommendFragment = new RecommendationsTab();
@@ -33,12 +34,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         Intent intent = getIntent();
-/*
-        mAccount= new UserAccount();
-        mAccount.AccountToken=intent.getStringExtra("AccountToken");
-        mAccount.Email = intent.getStringExtra("Email");
-        mAccount.UserId = intent.getIntExtra("UserId", 0);
-*/
+
         ActionBar actionBar = getActionBar();
 
         actionBar.setDisplayShowHomeEnabled(false);
