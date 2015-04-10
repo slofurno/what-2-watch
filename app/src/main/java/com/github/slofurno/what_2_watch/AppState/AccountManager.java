@@ -8,16 +8,11 @@ import javax.inject.Singleton;
  * Created by slofurno on 4/8/2015.
  */
 
-public class AccountManager {
-
-    private AccountManager(){}
-
-    private static class SingletonHolder {
-        private static final AccountManager INSTANCE = new AccountManager();
-    }
+public enum AccountManager {
+    INSTANCE;
 
     public static AccountManager getInstance() {
-        return SingletonHolder.INSTANCE;
+        return INSTANCE;
     }
 
     private UserAccount userAccount = new UserAccount();

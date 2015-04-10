@@ -42,9 +42,7 @@ public class RecommendationsTab extends BaseFragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private ListView listview;
     private View rootView;
-    private ArrayAdapter<Movie> adapter;
-    private List<Movie> movies;
-    private Context context;
+
     /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -119,7 +117,7 @@ public class RecommendationsTab extends BaseFragment {
     }
 
     @Subscribe
-    public void getUserActorsResult(GetUserMoviesAsyncEvent event) {
+    public void getUserMoviesResult(GetUserMoviesAsyncEvent event) {
 
         if (event.getResponseCode()==200){
 
